@@ -26,7 +26,7 @@ public class ExamManageController {
     @GetMapping("/exams/{page}/{size}")
     public ApiResult findAll(@PathVariable("page") Integer page,
                              @PathVariable("size") Integer size,
-                             @RequestParam(required = false, value = "source", defaultValue = "") String source) {
+                             @RequestParam(value = "source", required = false) String source) {
         System.out.println("分页查询所有试卷");
         ApiResult apiResult;
         ExamManage queryParams = new ExamManage();

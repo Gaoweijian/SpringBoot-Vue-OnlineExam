@@ -6,6 +6,7 @@ import com.exam.entity.JudgeQuestion;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface JudgeQuestionMapper {
 
     /**
      * 查询最后一条记录的questionId
+     *
      * @return JudgeQuestion
      */
     @Select("select questionId from judge_question order by questionId desc limit 1")
@@ -32,5 +34,11 @@ public interface JudgeQuestionMapper {
     int add(JudgeQuestion judgeQuestion);
 
     @Select("select questionId from judge_question  where subject=#{subject}  order by rand() desc limit #{pageNo}")
-    List<Integer> findBySubject(String subject,Integer pageNo);
+    List<Integer> findBySubject(String subject, Integer pageNo);
+
+    @Select("select * from judge_question t where t.questionId = #{questionId}")
+    JudgeQuestion findOnlyQuestionById(String questionId);
+
+    @Update("update judge_question set  subject=#{subject},question=#{question},answer=#{answer},analysis=#{analysis},level=#{level},section=#{section} where questionId = #{questionId}")
+    int edit(JudgeQuestion judgeQuestion);
 }

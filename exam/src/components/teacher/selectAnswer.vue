@@ -41,6 +41,11 @@
       <el-table-column prop="type" label="题目类型" width="200"></el-table-column>
       <el-table-column prop="score" label="试题分数" width="150"></el-table-column>
       <el-table-column prop="level" label="难度等级" width="133"></el-table-column>
+      <el-table-column prop="level" label="操作" width="133">
+        <template slot-scope="scope">
+          <el-button @click="edit(scope.row)" type="primary" size="small">修改试题</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -131,6 +136,11 @@ export default {
       } else {
         return "success-row";
       }
+    },
+    edit(row){
+      //打开修改页面
+      console.info(row);
+      this.$router.push({path: '/editAnswerChildren', query: {questionId:row.questionId,type:row.type,subject:row.subject}})
     }
   }
 };

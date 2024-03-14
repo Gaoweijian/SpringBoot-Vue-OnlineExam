@@ -6,15 +6,15 @@
 
     <select id="findAll" resultType="com.exam.vo.AnswerVO">
         select
-               *
+            *
         from (
-            select question, subject, score, section, level, '选择题' as type
+            select questionId,question, subject, score, section, level, '选择题' as type
             from multi_question
             union
-            select question, subject, score, section, level, '判断题' as type
+            select questionId,question, subject, score, section, level, '判断题' as type
             from judge_question
             union
-            select question, subject, score, section, level, '填空题' as type
+            select questionId,question, subject, score, section, level, '填空题' as type
             from fill_question
         ) t where 1=1
         <if test="params.type != null and params.type!=''">
