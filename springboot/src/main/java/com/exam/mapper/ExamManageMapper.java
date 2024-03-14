@@ -12,8 +12,8 @@ public interface ExamManageMapper {
     @Select("select * from exam_manage")
     List<ExamManage> findAll();
 
-    @Select("select * from exam_manage")
-    IPage<ExamManage> findAll(Page page);
+//    @Select("select * from exam_manage")
+    IPage<ExamManage> findAll(Page page,@Param("params") ExamManage queryParams);
 
     @Select("select * from exam_manage where examCode = #{examCode}")
     ExamManage findById(Integer examCode);

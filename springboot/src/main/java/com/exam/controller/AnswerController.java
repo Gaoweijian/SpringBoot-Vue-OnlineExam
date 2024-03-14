@@ -7,9 +7,7 @@ import com.exam.serviceimpl.AnswerServiceImpl;
 import com.exam.util.ApiResultHandler;
 import com.exam.vo.AnswerVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -18,11 +16,20 @@ public class AnswerController {
     @Autowired
     private AnswerServiceImpl answerService;
 
-    @GetMapping("/answers/{page}/{size}")
-    public ApiResult findAllQuestion(@PathVariable("page") Integer page, @PathVariable("size") Integer size){
-       Page<AnswerVO> answerVOPage = new Page<>(page,size);
-       IPage<AnswerVO> answerVOIPage = answerService.findAll(answerVOPage);
-       return ApiResultHandler.buildApiResult(200,"查询所有题库",answerVOIPage);
-
+    @GetMapping("/answers")
+    public ApiResult findAllQuestion(
+            @RequestParam("currentPage") Integer page,
+            @RequestParam("size") Integer size,
+            @RequestParam(required = false, value = "type", defaultValue = "") String type,
+            @RequestParam(required = false, value = "subject", defaultValue = "") String subject,
+            @RequestParam(required = false, value = "question", defaultValue = "") String question
+    ) {
+        AnswerVO params = new AnswerVO();
+        params.setQuestion(question);
+        params.setType(type);
+        params.setSubject(subject);
+        Page<AnswerVO> answerVOPage = new Page<>(page, size);
+        IPage<AnswerVO> answerVOIPage = answerService.findAll(answerVOPage, params);
+        return ApiResultHandler.buildApiResult(200, "查询所有题库", answerVOIPage);
     }
 }

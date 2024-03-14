@@ -9,6 +9,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueCookies from 'vue-cookies'
 import store from '@/vuex/store'
+// 导入全局样式表
+import '../src/assets/iess/common.css'
 
 Vue.use(ElementUI)
 Vue.use(VueCookies)

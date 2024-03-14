@@ -22,8 +22,8 @@ public class ExamManageServiceImpl implements ExamManageService {
     }
 
     @Override
-    public IPage<ExamManage> findAll(Page<ExamManage> page) {
-        return examManageMapper.findAll(page);
+    public IPage<ExamManage> findAll(Page<ExamManage> page, ExamManage queryParams) {
+        return examManageMapper.findAll(page, queryParams);
     }
 
     @Override

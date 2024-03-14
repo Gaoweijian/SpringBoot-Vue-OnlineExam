@@ -1,6 +1,22 @@
 //获取试卷并跳转到添加题库
 <template>
   <div class="exam">
+
+    <!--增加查询选项-->
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <div class="grid-content">
+          <label class="label-size">试卷名称：</label>
+          <el-input class="w150" v-model="queryParams.source" placeholder="请输入内容"></el-input>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content">
+          <el-button type="primary" @click="getExamInfo()">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <el-table :data="pagination.records" border>
       <el-table-column fixed="left" prop="source" label="试卷名称" width="180"></el-table-column>
       <el-table-column prop="description" label="介绍" width="200"></el-table-column>
@@ -34,6 +50,9 @@
 export default {
   data() {
     return {
+      queryParams: {
+        source: ''
+      },
       form: {}, //保存点击以后当前试卷的信息
       pagination: { //分页后的考试信息
         current: 1, //当前页
@@ -47,7 +66,11 @@ export default {
   },
   methods: {
     getExamInfo() { //分页查询所有试卷信息
-      this.$axios(`/api/exams/${this.pagination.current}/${this.pagination.size}`).then(res => {
+      this.$axios({
+        method: 'get',
+        url: `/api/exams/${this.pagination.current}/${this.pagination.size}`,
+        params: this.queryParams
+      }).then(res => {
         this.pagination = res.data.data
       }).catch(error => {
       })
@@ -62,8 +85,8 @@ export default {
       this.pagination.current = val
       this.getExamInfo()
     },
-    add(paperId,source) { //增加题库
-      this.$router.push({path:'/addAnswerChildren',query: {paperId: paperId,subject:source}})
+    add(paperId, source) { //增加题库
+      this.$router.push({path: '/addAnswerChildren', query: {paperId: paperId, subject: source}})
     }
   },
 };
@@ -71,13 +94,15 @@ export default {
 <style lang="less" scoped>
 .exam {
   padding: 0px 40px;
+
   .page {
     margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .edit{
+
+  .edit {
     margin-left: 20px;
   }
 }
