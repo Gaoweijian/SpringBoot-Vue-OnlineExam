@@ -394,7 +394,7 @@ export default {
           fillNumber: this.fillNumber,
           judgeNumber: this.judgeNumber,
           paperId: this.paperId,
-          subject: '' //题目数量太少，指定为计算机网络出题
+          subject: this.subject //题目数量太少，指定为计算机网络出题
         }
       }).then(res => {
         console.log(res)
