@@ -3,6 +3,15 @@
   <div class="add">
     <el-tabs v-model="activeName">
     <el-tab-pane name="first">
+
+      <el-row>
+        <el-col :span="24">
+          <div class="grid-content bg-purple-yellow text-left-center ">
+            <label class="color-dark">上一个录入的题目是：{{lastQuestion}}</label>
+          </div>
+        </el-col>
+      </el-row>
+
       <span slot="label"><i class="el-icon-circle-plus"></i>添加试题</span>
       <section class="append">
         <ul>
@@ -261,6 +270,7 @@ export default {
       fillNumber: null, //填空题出题数量
       judgeNumber: null, //判断题出题数量
       activeName: 'first',  //活动选项卡
+      lastQuestion: '',
       options: [ //题库类型
         {
           value: '选择题',
@@ -335,7 +345,7 @@ export default {
       subject: '', //试卷名称用来接收路由参数
       postChange: { //选择题提交内容
         subject: '', //试卷名称
-        level: '', //难度等级选中值
+        level: 1, //难度等级选中值
         rightAnswer: '', //正确答案选中值
         section: '', //对应章节
         question: '', //题目
@@ -347,7 +357,7 @@ export default {
       },
       postFill: { //填空题提交内容
         subject: '', //试卷名称
-        level: '', //难度等级选中值
+        level: 1, //难度等级选中值
         answer: '', //正确答案
         section: '', //对应章节
         question: '', //题目
@@ -355,7 +365,7 @@ export default {
       },
       postJudge: { //判断题提交内容
         subject: '', //试卷名称
-        level: '', //难度等级选中值
+        level: 1, //难度等级选中值
         answer: '', //正确答案
         section: '', //对应章节
         question: '', //题目
@@ -428,7 +438,8 @@ export default {
             message: '已添加到题库',
             type: 'success'
           })
-          this.postChange = {}
+          this.lastQuestion = this.postChange.question;
+          this.postChange = {level: 1}
         }
       }).then(() => {
         this.$axios(`/api/multiQuestionId`).then(res => { //获取当前题目的questionId
@@ -460,7 +471,8 @@ export default {
             message: '已添加到题库',
             type: 'success'
           })
-          this.postFill = {}
+          this.lastQuestion = this.postFill.question;
+          this.postFill = {level: 1}
         }
       }).then(() => {
         this.$axios(`/api/fillQuestionId`).then(res => { //获取当前题目的questionId
@@ -492,8 +504,9 @@ export default {
             message: '已添加到题库',
             type: 'success'
           })
-          this.postJudge = {}
-        }
+          this.lastQuestion = this.postJudge.question;
+          this.postJudge = {level: 1}
+        }s
       }).then(() => {
         this.$axios(`/api/judgeQuestionId`).then(res => { //获取当前题目的questionId
           let questionId = res.data.data.questionId
