@@ -45,8 +45,8 @@
             </el-input>
           </li>
           <li v-if="optionValue == '选择题'">
-            <span>难度等级:</span>
-            <el-select v-model="postChange.level" placeholder="选择难度等级" class="w150">
+            <span><label style="color: red"> *</label>难度等级:</span>
+            <el-select  aria-required="true"  v-model="postChange.level" placeholder="选择难度等级" class="w150">
               <el-option
                 v-for="item in levels"
                 :key="item.value"
@@ -56,8 +56,8 @@
             </el-select>
           </li>
           <li v-if="optionValue == '填空题'">
-            <span>难度等级:</span>
-            <el-select v-model="postFill.level" placeholder="选择难度等级" class="w150">
+            <span><label style="color: red"> *</label>难度等级:</span>
+            <el-select aria-required="true"  v-model="postFill.level" placeholder="选择难度等级" class="w150">
               <el-option
                 v-for="item in levels"
                 :key="item.value"
@@ -67,8 +67,8 @@
             </el-select>
           </li>
           <li v-if="optionValue == '判断题'">
-            <span>难度等级:</span>
-            <el-select v-model="postJudge.level" placeholder="选择难度等级" class="w150">
+            <span><label style="color: red"> *</label>难度等级:</span>
+            <el-select aria-required="true" v-model="postJudge.level" placeholder="选择难度等级" class="w150">
               <el-option
                 v-for="item in levels"
                 :key="item.value"
@@ -79,7 +79,7 @@
           </li>
           <li v-if="optionValue == '选择题'">
             <span>正确选项:</span>
-            <el-select v-model="postChange.rightAnswer" placeholder="选择正确答案" class="w150">
+            <el-select  aria-required="true"  v-model="postChange.rightAnswer" placeholder="选择正确答案" class="w150">
               <el-option
                 v-for="item in rights"
                 :key="item.value"
@@ -384,7 +384,7 @@ export default {
           fillNumber: this.fillNumber,
           judgeNumber: this.judgeNumber,
           paperId: this.paperId,
-          subject: '计算机网络' //题目数量太少，指定为计算机网络出题
+          subject: '' //题目数量太少，指定为计算机网络出题
         }
       }).then(res => {
         console.log(res)

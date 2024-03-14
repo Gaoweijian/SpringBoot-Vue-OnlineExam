@@ -32,7 +32,7 @@
         <el-collapse-item class="header" name="0">
           <template slot="title" class="stitle" >
             <div class="title">
-              <span>{{examData.source}}</span><i class="header-icon el-icon-info"></i>
+              <span style="font-size: 17px;">{{examData.source}}</span><i class="header-icon el-icon-info"></i>
               <span class="time">{{examData.totalScore}}分 / {{examData.totalTime}}分钟</span>
               <el-button type="primary" size="small">点击查看试题详情</el-button>
             </div>
@@ -70,7 +70,7 @@
             </el-collapse-item>
           </el-collapse>
         </el-collapse-item>
-        
+
       </el-collapse>
     </div>
     <!--考生须知对话框-->
@@ -201,7 +201,7 @@ export default {
   padding: 5px 10px;
   border: 1px solid #88949b;
   border-radius: 4px;
-} 
+}
 .wrapper .bottom {
   display: flex;
   margin-left: 20px;
