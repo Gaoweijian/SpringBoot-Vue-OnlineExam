@@ -48,6 +48,11 @@
   width: 217px;
 }
 
+.w300 {
+  margin-left: 20px;
+  width: 300px;
+}
+
 /**向左居中*/
 .text-left-center {
   display: flex;

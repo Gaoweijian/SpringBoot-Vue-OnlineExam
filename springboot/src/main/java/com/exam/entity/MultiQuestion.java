@@ -19,6 +19,10 @@ public class MultiQuestion {
 
     private String answerD;
 
+    private String answerE;
+
+    private String answerF;
+
     private String question;
 
     private String level;

@@ -51,6 +51,15 @@
               clearable>
             </el-input>
           </li>
+          <li v-if="optionValue == '多项选择题'">
+            <span>所属章节：</span>
+            <el-input
+              placeholder="请输入对应章节"
+              v-model="postMultiChange.section"
+              class="w150"
+              clearable>
+            </el-input>
+          </li>
           <li v-if="optionValue == '选择题'">
             <span>难度等级:</span>
             <el-select v-model="postChange.level" placeholder="选择难度等级" class="w150">
@@ -84,9 +93,32 @@
               </el-option>
             </el-select>
           </li>
+          <li v-if="optionValue == '多项选择题'">
+            <span><label style="color: red"> *</label>难度等级:</span>
+            <el-select  aria-required="true"  v-model="postMultiChange.level" placeholder="选择难度等级" class="w150">
+              <el-option
+                v-for="item in levels"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </li>
           <li v-if="optionValue == '选择题'">
             <span>正确选项:</span>
             <el-select v-model="postChange.rightAnswer" placeholder="选择正确答案" class="w150">
+              <el-option
+                v-for="item in rights"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </li>
+
+          <li v-if="optionValue == '多项选择题'">
+            <span>正确选项:</span>
+            <el-select multiple  aria-required="true"  v-model="postMultiChange.rightAnswers" placeholder="选择正确答案" class="w300">
               <el-option
                 v-for="item in rights"
                 :key="item.value"
@@ -224,6 +256,89 @@
             <el-button type="primary" @click="judgeSubmit()">提交修改</el-button>
           </div>
         </div>
+
+
+        <!-- 选择题部分 -->
+        <div class="change" v-if="optionValue == '多项选择题'">
+          <div class="title">
+            <el-tag>题目:</el-tag><span>在下面的输入框中输入题目,形如--DNS 服务器和DHCP服务器的作用是（）</span>
+            <el-input
+              type="textarea"
+              rows="4"
+              v-model="postMultiChange.question"
+              placeholder="请输入题目内容"
+              resize="none"
+              class="answer">
+            </el-input>
+          </div>
+          <div class="options">
+            <ul>
+              <li>
+                <el-tag type="success">A</el-tag>
+                <el-input
+                  placeholder="请输入选项A的内容"
+                  v-model="postMultiChange.answerA"
+                  clearable="">
+                </el-input>
+              </li>
+              <li>
+                <el-tag type="success">B</el-tag>
+                <el-input
+                  placeholder="请输入选项B的内容"
+                  v-model="postMultiChange.answerB"
+                  clearable="">
+                </el-input>
+              </li>
+              <li>
+                <el-tag type="success">C</el-tag>
+                <el-input
+                  placeholder="请输入选项C的内容"
+                  v-model="postMultiChange.answerC"
+                  clearable="">
+                </el-input>
+              </li>
+              <li>
+                <el-tag type="success">D</el-tag>
+                <el-input
+                  placeholder="请输入选项D的内容"
+                  v-model="postMultiChange.answerD"
+                  clearable="">
+                </el-input>
+              </li>
+              <li>
+                <el-tag type="success">E</el-tag>
+                <el-input
+                  placeholder="请输入选项E的内容"
+                  v-model="postMultiChange.answerE"
+                  clearable="">
+                </el-input>
+              </li>
+              <li>
+                <el-tag type="success">F</el-tag>
+                <el-input
+                  placeholder="请输入选项F的内容"
+                  v-model="postMultiChange.answerF"
+                  clearable="">
+                </el-input>
+              </li>
+            </ul>
+          </div>
+          <div class="title">
+            <el-tag>解析:</el-tag><span>在下面的输入框中输入题目解析</span>
+            <el-input
+              type="textarea"
+              rows="4"
+              v-model="postMultiChange.analysis"
+              placeholder="请输入答案解析"
+              resize="none"
+              class="answer">
+            </el-input>
+          </div>
+          <div class="submit">
+            <el-button type="primary" @click="changeMultiSubmit()">立即添加</el-button>
+          </div>
+        </div>
+
       </section>
     </el-tab-pane>
   </el-tabs>
@@ -251,6 +366,10 @@ export default {
           value: '判断题',
           label: '判断题'
         },
+        {
+          value: '多项选择题',
+          label: '多项选择题'
+        }
       ],
       difficulty: [ //试题难度
         {
@@ -306,6 +425,14 @@ export default {
           value: 'D',
           label: 'D'
         },
+        {
+          value: 'E',
+          label: 'E'
+        },
+        {
+          value: 'F',
+          label: 'F'
+        },
       ],
       paperId: null,
       optionValue: '选择题', //题型选中值
@@ -340,6 +467,21 @@ export default {
         section: '', //对应章节
         question: '', //题目
         analysis: '', //解析
+      },
+      postMultiChange: { //选择题提交内容
+        subject: '', //试卷名称
+        level: 1, //难度等级选中值
+        rightAnswers: [], //正确答案选中值
+        rightAnswer: '', //正确答案选中值
+        section: '', //对应章节
+        question: '', //题目
+        analysis: '', //解析
+        answerA: '',
+        answerB: '',
+        answerC: '',
+        answerD: '',
+        answerE: '',
+        answerF: '',
       },
       postPaper: { //考试管理表对应字段
         paperId: null,
@@ -399,6 +541,8 @@ export default {
         API_URL = '/api/fillQuestionById';
       } else if ('判断题' === type) {
         API_URL = '/api/judgeQuestionById';
+      }else if ('多项选择题' === type) {
+        API_URL = '/api/multiQuestionById';
       }
       this.optionValue = type;
       this.$axios({ //提交数据到选择题题库表
@@ -407,7 +551,6 @@ export default {
         params: {questionId:questionId}
       }).then(res => { //添加成功显示提示
         let status = res.data.code
-        console.info(res.data);
         if(status == 200) {
           if ('选择题' === type) {
             this.postChange = res.data.data;
@@ -415,6 +558,11 @@ export default {
             this.postFill = res.data.data;
           } else if ('判断题' === type) {
             this.postJudge = res.data.data;
+          }else if ('多项选择题' === type) {
+            //转换正确选项
+            let rightAnswers = res.data.data.rightAnswer.split(",");
+            this.postMultiChange = res.data.data;
+            this.postMultiChange.rightAnswers = rightAnswers;
           }
         }
       })
@@ -469,7 +617,42 @@ export default {
           })
         }
       })
-    }
+    },
+    changeMultiSubmit() { //选择题题库提交
+      this.postMultiChange.subject = this.subject
+      //转换多选答案
+      this.postMultiChange.rightAnswer = this.postMultiChange.rightAnswers.join(",");
+      this.$axios({ //提交数据到选择题题库表
+        url: '/api/MultiQuestion',
+        method: 'post',
+        data: {
+          ...this.postMultiChange
+        }
+      }).then(res => { //添加成功显示提示
+        let status = res.data.code
+        if(status == 200) {
+          this.$message({
+            message: '已添加到题库',
+            type: 'success'
+          })
+          this.lastQuestion = this.postMultiChange.question;
+          this.postMultiChange = {level: 1}
+        }
+      }).then(() => {
+        this.$axios(`/api/multiQuestionId`).then(res => { //获取当前题目的questionId
+          let questionId = res.data.data.questionId
+          this.postPaper.questionId = questionId
+          this.postPaper.questionType = 1
+          this.$axios({
+            url: '/api/paperManage',
+            method: 'Post',
+            data: {
+              ...this.postPaper
+            }
+          })
+        })
+      })
+    },
   },
 };
 </script>

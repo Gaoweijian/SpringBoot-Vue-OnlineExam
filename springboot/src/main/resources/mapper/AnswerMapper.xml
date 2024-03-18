@@ -9,7 +9,10 @@
             *
         from (
             select questionId,question, subject, score, section, level, '选择题' as type
-            from multi_question
+            from multi_question where multiType = 0
+            union
+            select questionId,question, subject, score, section, level, '多项选择题' as type
+            from multi_question where multiType = 1
             union
             select questionId,question, subject, score, section, level, '判断题' as type
             from judge_question

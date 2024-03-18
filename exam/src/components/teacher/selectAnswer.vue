@@ -80,6 +80,10 @@ export default {
         {
           name: '填空题',
           value: '填空题'
+        },
+        {
+          name: '多项选择题',
+          value: '多项选择题'
         }
       ],
       queryParams: {
