@@ -36,6 +36,8 @@ public class ItemController {
     public ApiResult ItemController(@RequestBody Item item) {
         // 选择题
         Integer changeNumber = item.getChangeNumber();
+        // 多项选择题
+        Integer changeMultiNumber = item.getChangeNumber();
         // 填空题
         Integer fillNumber = item.getFillNumber();
         // 判断题
@@ -44,11 +46,23 @@ public class ItemController {
         Integer paperId = item.getPaperId();
 
         // 选择题数据库获取
-        List<Integer>  changeNumbers = multiQuestionService.findBySubject(item.getSubject(), changeNumber);
+        List<Integer>  changeNumbers = multiQuestionService.findBySubject(item.getSubject(), changeNumber ,0);
         if(changeNumbers==null){
             return ApiResultHandler.buildApiResult(400,"选择题数据库获取失败",null);
         }
         for (Integer number : changeNumbers) {
+            PaperManage paperManage = new PaperManage(paperId,1,number);
+            int index = paperService.add(paperManage);
+            if(index==0)
+                return ApiResultHandler.buildApiResult(400,"选择题组卷保存失败",null);
+        }
+
+        //多项选择题数据库获取
+        List<Integer>  changeMultiNumbers = multiQuestionService.findBySubject(item.getSubject(), changeMultiNumber ,1);
+        if(changeMultiNumbers==null){
+            return ApiResultHandler.buildApiResult(400,"多项选择题数据库获取失败",null);
+        }
+        for (Integer number : changeMultiNumbers) {
             PaperManage paperManage = new PaperManage(paperId,1,number);
             int index = paperService.add(paperManage);
             if(index==0)
@@ -65,6 +79,7 @@ public class ItemController {
             if(index==0)
                 return ApiResultHandler.buildApiResult(400,"填空题题组卷保存失败",null);
         }
+
         // 判断题
         List<Integer> judges = judgeQuestionService.findBySubject(item.getSubject(), judgeNumber);
         if(fills==null)

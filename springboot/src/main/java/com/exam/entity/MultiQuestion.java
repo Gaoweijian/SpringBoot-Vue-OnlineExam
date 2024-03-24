@@ -29,8 +29,12 @@ public class MultiQuestion {
 
     private String rightAnswer;
 
+    private String[] rightAnswers;
+
     private String analysis; //题目解析
 
     private Integer score;
+
+    private Integer multiType;
 
 }

@@ -124,7 +124,7 @@
             <span>正确选项:</span>
             <el-select multiple  aria-required="true"  v-model="postMultiChange.rightAnswers" placeholder="选择正确答案" class="w300">
               <el-option
-                v-for="item in rights"
+                v-for="item in multiRights"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -371,6 +371,9 @@
             <span>判断题数量：</span> <el-input type="text" v-model="judgeNumber"></el-input>
           </li>
           <li>
+            <span>多项选择题数量：</span> <el-input type="text" v-model="changeMultiNumber"></el-input>
+          </li>
+          <li>
             <el-button type="primary" @click="create()">立即组卷</el-button>
           </li>
         </ul>
@@ -385,6 +388,7 @@ export default {
   data() {
     return {
       changeNumber: null, //选择题出题数量
+      changeMultiNumber: null, //多项选择题出题数量
       fillNumber: null, //填空题出题数量
       judgeNumber: null, //判断题出题数量
       activeName: 'first',  //活动选项卡
@@ -445,6 +449,24 @@ export default {
         },
       ],
       rights: [ //正确答案
+        {
+          value: 'A',
+          label: 'A'
+        },
+        {
+          value: 'B',
+          label: 'B'
+        },
+        {
+          value: 'C',
+          label: 'C'
+        },
+        {
+          value: 'D',
+          label: 'D'
+        }
+      ],
+      multiRights:[
         {
           value: 'A',
           label: 'A'
@@ -538,6 +560,7 @@ export default {
           changeNumber: this.changeNumber,
           fillNumber: this.fillNumber,
           judgeNumber: this.judgeNumber,
+          changeMultiNumber: this.changeMultiNumber,
           paperId: this.paperId,
           subject: this.subject //题目数量太少，指定为计算机网络出题
         }
@@ -605,6 +628,7 @@ export default {
       this.postMultiChange.subject = this.subject
       //转换多选答案
       this.postMultiChange.rightAnswer = this.postMultiChange.rightAnswers.join(",");
+      this.postMultiChange.multiType = 1;
       this.$axios({ //提交数据到选择题题库表
         url: '/api/MultiQuestion',
         method: 'post',

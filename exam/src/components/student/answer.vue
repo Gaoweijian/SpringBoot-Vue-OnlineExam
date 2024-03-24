@@ -43,7 +43,7 @@
                 <p>选择题部分</p>
                 <ul>
                   <li v-for="(list, index1) in topic[1]" :key="index1">
-                    <a href="javascript:;" 
+                    <a href="javascript:;"
                       @click="change(index1)"
                       :class="{'border': index == index1 && currentType == 1,'bg': bg_flag && topic[1][index1].isClick == true}">
                       <span :class="{'mark': topic[1][index1].isMark == true}"></span>
@@ -68,17 +68,30 @@
                   </li>
                 </ul>
               </div>
+              <div class="item">
+                <p>多项选择题部分</p>
+                <ul>
+                  <li v-for="(list, index4) in topic[4]" :key="index4">
+                    <a href="javascript:;"
+                       @click="changeMulti(index4)"
+                       :class="{'border': index == index4 && currentType == 1,'bg': bg_flag && topic[4][index4].isClick == true}">
+                      <span :class="{'mark': topic[4][index4].isMark == true}"></span>
+                      {{index4+1}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
               <div class="final" @click="commit()">结束考试</div>
             </div>
           </div>
-        </transition>  
+        </transition>
         <!--右边选择答题区-->
         <transition name="slider-fade">
         <div class="right">
           <div class="title">
             <p>{{title}}</p>
             <i class="iconfont icon-right auto-right"></i>
-            <span>全卷共{{topicCount[0] + topicCount[1] + topicCount[2]}}题  <i class="iconfont icon-time"></i>倒计时：<b>{{time}}</b>分钟</span>
+            <span>全卷共{{topicCount[0] + topicCount[1] + topicCount[2]+ topicCount[3]}}题  <i class="iconfont icon-time"></i>倒计时：<b>{{time}}</b>分钟</span>
           </div>
           <div class="content">
             <p class="topic"><span class="number">{{number}}</span>{{showQuestion}}</p>
@@ -126,6 +139,23 @@
                 </ul>
               </div>
             </div>
+            <div v-if="currentType == 4">
+              <el-checkbox-group v-model="checkList[index]" @change="getMultiChangeLabel" >
+                <el-checkbox class="block" :label="1">{{showAnswer.answerA}}</el-checkbox>
+                <el-checkbox class="block" :label="2">{{showAnswer.answerB}}</el-checkbox>
+                <el-checkbox class="block" :label="3">{{showAnswer.answerC}}</el-checkbox>
+                <el-checkbox class="block" :label="4">{{showAnswer.answerD}}</el-checkbox>
+                <el-checkbox class="block" :label="5">{{showAnswer.answerE}}</el-checkbox>
+                <el-checkbox class="block" :label="6">{{showAnswer.answerF}}</el-checkbox>
+              </el-checkbox-group>
+              <div class="analysis" v-if="isPractice">
+                <ul>
+                  <li> <el-tag type="success">正确姿势：</el-tag><span class="right">{{reduceAnswer.rightAnswer}}</span></li>
+                  <li><el-tag>题目解析：</el-tag></li>
+                  <li>{{reduceAnswer.analysis == null ? '暂无解析': reduceAnswer.analysis}}</li>
+                </ul>
+              </div>
+            </div>
           </div>
           <div class="operation">
             <ul class="end">
@@ -136,7 +166,7 @@
           </div>
         </div>
         </transition>
-     </div> 
+     </div>
   </div>
 </template>
 
@@ -156,6 +186,7 @@ export default {
       flag: false, //个人信息显示隐藏标识符
       currentType: 1, //当前题型类型  1--选择题  2--填空题  3--判断题
       radio: [], //保存考生所有选择题的选项
+      checkList: [], //保存考生所有多项选择题的选项
       title: "请选择正确的选项",
       index: 0, //全局index
       userInfo: { //用户信息
@@ -178,6 +209,7 @@ export default {
       fillAnswer: [[]], //二维数组保存所有填空题答案
       judgeAnswer: [], //保存所有判断题答案
       topic1Answer: [],  //学生选择题作答编号,
+      topic4Answer: [],  //学生选择题作答编号,
       rightAnswer: ''
     }
   },
@@ -202,7 +234,24 @@ export default {
       this.userInfo.id = this.$cookies.get("cid")
     },
     calcuScore() { //计算答题分数
-      
+
+    },
+    switchRightItem(elm) {
+      let right = '';
+      switch (elm) { //选项1,2,3,4 转换为 "A","B","C","D"
+        case 1:
+          right = "A"
+          break
+        case 2:
+          right = "B"
+          break
+        case 3:
+          right = "C"
+          break
+        case 4:
+          right = "D"
+      }
+      return right;
     },
     getExamData() { //获取当前试卷所有信息
       let date = new Date()
@@ -224,6 +273,10 @@ export default {
             let currentScore = 0
             for(let i = 0; i< data.length; i++) { //循环每种题型,计算出总分
               currentScore += data[i].score
+              //设置多选的答案数组长度
+              if(e == 4){
+                this.checkList.push([]);
+              }
             }
             this.score.push(currentScore) //把每种题型总分存入score
           })
@@ -252,11 +305,30 @@ export default {
         if(this.index <= 0){
           this.index = 0
         }
-        console.log(`总长度${len}`)
-        console.log(`当前index:${index}`)
         this.title = "请选择正确的选项"
         let Data = this.topic[1]
-        // console.log(Data)
+        this.showQuestion = Data[this.index].question //获取题目信息
+        this.showAnswer = Data[this.index]
+        this.number = this.index + 1
+      }else if(this.index >= len) {
+        this.index = 0
+        this.fill(this.index)
+      }
+    },
+    changeMulti(index) { //选择题
+      debugger
+      this.index = index
+      let reduceAnswer = this.topic[4][this.index]
+      this.reduceAnswer = reduceAnswer
+      this.isFillClick = true
+      this.currentType = 4
+      let len = this.topic[4].length
+      if(this.index < len) {
+        if(this.index <= 0){
+          this.index = 0
+        }
+        this.title = "请选择正确的选项"
+        let Data = this.topic[4]
         this.showQuestion = Data[this.index].question //获取题目信息
         this.showAnswer = Data[this.index]
         this.number = this.index + 1
@@ -279,16 +351,13 @@ export default {
           index = this.topic[1].length -1
           this.change(index)
         }else {
-          console.log(`总长度${len}`)
-          console.log(`当前index:${index}`)
           this.title = "请在横线处填写答案"
           let Data = this.topic[2]
-          console.log(Data)
           this.showQuestion = Data[index].question //获取题目信息
           let part= this.showQuestion.split("()").length -1 //根据题目中括号的数量确定填空横线数量
           this.part = part
           this.number = this.topicCount[0] + index + 1
-        } 
+        }
       }else if(index >= len) {
         this.index = 0
         this.judge(this.index)
@@ -303,11 +372,8 @@ export default {
           this.index = this.topic[2].length - 1
           this.fill(this.index)
         }else {
-          console.log(`总长度${len}`)
-          console.log(`当前index:${this.index}`)
           this.title = "请作出正确判断"
           let Data = this.topic[3]
-          console.log(Data)
           this.showQuestion = Data[index].question //获取题目信息
           this.number = this.topicCount[0] + this.topicCount[1] + index + 1
         }
@@ -324,7 +390,7 @@ export default {
         data[this.index]["isClick"] = true
       }
       /* 保存学生答题选项 */
-      this.topic1Answer[this.index] = val 
+      this.topic1Answer[this.index] = val
     },
     getJudgeLabel(val) {  //获取判断题作答选项
       this.judgeAnswer[this.index] = val
@@ -334,13 +400,24 @@ export default {
         data[this.index]["isClick"] = true
       }
     },
+    getMultiChangeLabel(val) {
+      //获取多项选择作答选项
+      this.checkList[this.index] = val //当前选择的序号
+      if(val) {
+        let data = this.topic[4]
+        this.bg_flag = true
+        data[this.index]["isClick"] = true
+      }
+      /* 保存学生答题选项 */
+      this.topic4Answer[this.index] = val
+    },
     previous() { //上一题
       this.index --
       switch(this.currentType) {
-        case 1: 
+        case 1:
           this.change(this.index)
           break
-        case 2: 
+        case 2:
           this.fill(this.index)
           break
         case 3:
@@ -351,10 +428,10 @@ export default {
     next() { //下一题
       this.index ++
       switch(this.currentType) {
-        case 1: 
+        case 1:
           this.change(this.index)
           break
-        case 2: 
+        case 2:
           this.fill(this.index)
           break
         case 3:
@@ -372,6 +449,9 @@ export default {
           break
         case 3:
           this.topic[3][this.index]["isMark"] = true //判断题标记
+          break
+        case 4:
+          this.topic[4][this.index]["isMark"] = true //判断题标记
       }
     },
     commit() { //答案提交计算分数
@@ -399,7 +479,6 @@ export default {
           }
           console.log(right,this.topic[1][index].rightAnswer)
         }
-        // console.log(topic1Answer)
       })
       /**计算判断题总分 */
       // console.log(`this.fillAnswer${this.fillAnswer}`)
@@ -428,6 +507,30 @@ export default {
             finalScore += this.topic[3][index].score // 计算总分数
           }
       })
+
+      /* 计算多项选择题总分 */
+      let topic4Answer = this.topic4Answer
+      topic4Answer.forEach((element,index) => { //循环每道选择题根据选项计算分数
+        let right = null
+        if(element != null) {
+          let rightsRes = true;
+          let rightAnswer = this.topic[4][index].rightAnswer;
+          for(let elm of element){
+            let switchRight = this.switchRightItem(elm);
+            if(!rightAnswer.concat(switchRight)){
+              rightsRes = false;
+            }
+          }
+          console.info("多选题答案",index,rightAnswer,element);
+          if(element.length != this.topic[4][index].rightAnswers.length){
+            rightsRes =false;
+          }
+          if(rightsRes) { // 当前选项与正确答案对比
+            finalScore += this.topic[4][index].score // 计算总分数
+          }
+        }
+      })
+
       console.log(`目前总分${finalScore}`)
       if(this.time != 0) {
         this.$confirm("考试结束时间未到,是否提前交卷","友情提示",{
@@ -453,11 +556,11 @@ export default {
           }).then(res => {
             if(res.data.code == 200) {
               this.$router.push({path:'/studentScore',query: {
-                score: finalScore, 
+                score: finalScore,
                 startTime: this.startTime,
                 endTime: this.endTime
               }})
-            }  
+            }
           })
         }).catch(() => {
           console.log("继续答题")
@@ -550,6 +653,10 @@ export default {
   opacity: 0;
 }
 
+.block {
+  display:block
+}
+
 .operation .end li:nth-child(2) {
   display: flex;
   flex-direction: column;
@@ -592,7 +699,7 @@ export default {
 }
 .content .topic {
   padding: 20px 0px;
-  padding-top: 30px; 
+  padding-top: 30px;
 }
 .right .content {
   background-color: #fff;
@@ -678,7 +785,7 @@ export default {
   justify-content: space-around;
   flex-wrap: wrap;
 }
-.l-bottom .item ul li a { 
+.l-bottom .item ul li a {
   position: relative;
   justify-content: center;
   display: inline-flex;

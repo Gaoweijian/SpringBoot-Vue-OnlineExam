@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MultiQuestionService {
 
-    List<MultiQuestion> findByIdAndType(Integer PaperId);
+    List<MultiQuestion> findByIdAndType(Integer PaperId,Integer multiType);
 
     IPage<MultiQuestion> findAll(Page<MultiQuestion> page);
 
@@ -16,7 +16,7 @@ public interface MultiQuestionService {
 
     int add(MultiQuestion multiQuestion);
 
-    List<Integer> findBySubject(String subject,Integer pageNo);
+    List<Integer> findBySubject(String subject, Integer pageNo, Integer multiType);
 
     MultiQuestion findQuestionById(String questionId);
 

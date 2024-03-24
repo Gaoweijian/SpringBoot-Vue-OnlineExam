@@ -1,6 +1,6 @@
 // 添加题库
 <template>
-  <div class="add">
+  <div class="edit">
     <el-tabs v-model="activeName">
     <!--修改试题-->
     <el-tab-pane name="third">
@@ -95,7 +95,7 @@
           </li>
           <li v-if="optionValue == '多项选择题'">
             <span><label style="color: red"> *</label>难度等级:</span>
-            <el-select  aria-required="true"  v-model="postMultiChange.level" placeholder="选择难度等级" class="w150">
+            <el-select v-model="postMultiChange.level" placeholder="选择难度等级" class="w150">
               <el-option
                 v-for="item in levels"
                 :key="item.value"
@@ -115,12 +115,11 @@
               </el-option>
             </el-select>
           </li>
-
           <li v-if="optionValue == '多项选择题'">
             <span>正确选项:</span>
-            <el-select multiple  aria-required="true"  v-model="postMultiChange.rightAnswers" placeholder="选择正确答案" class="w300">
+            <el-select multiple  v-model="postMultiChange.rightAnswers" placeholder="选择正确答案" class="w300">
               <el-option
-                v-for="item in rights"
+                v-for="item in multiRights"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -335,10 +334,9 @@
             </el-input>
           </div>
           <div class="submit">
-            <el-button type="primary" @click="changeMultiSubmit()">立即添加</el-button>
+            <el-button type="primary" @click="changeMultiSubmit()">提交修改</el-button>
           </div>
         </div>
-
       </section>
     </el-tab-pane>
   </el-tabs>
@@ -349,9 +347,6 @@
 export default {
   data() {
     return {
-      changeNumber: null, //选择题出题数量
-      fillNumber: null, //填空题出题数量
-      judgeNumber: null, //判断题出题数量
       activeName: 'third',  //活动选项卡
       options: [ //题库类型
         {
@@ -409,6 +404,24 @@ export default {
         },
       ],
       rights: [ //正确答案
+        {
+          value: 'A',
+          label: 'A'
+        },
+        {
+          value: 'B',
+          label: 'B'
+        },
+        {
+          value: 'C',
+          label: 'C'
+        },
+        {
+          value: 'D',
+          label: 'D'
+        }
+      ],
+      multiRights:[
         {
           value: 'A',
           label: 'A'
@@ -560,9 +573,7 @@ export default {
             this.postJudge = res.data.data;
           }else if ('多项选择题' === type) {
             //转换正确选项
-            let rightAnswers = res.data.data.rightAnswer.split(",");
-            this.postMultiChange = res.data.data;
-            this.postMultiChange.rightAnswers = rightAnswers;
+            this.postMultiChange =   Object.assign({},res.data.data);
           }
         }
       })
@@ -619,9 +630,8 @@ export default {
       })
     },
     changeMultiSubmit() { //选择题题库提交
-      this.postMultiChange.subject = this.subject
       //转换多选答案
-      this.postMultiChange.rightAnswer = this.postMultiChange.rightAnswers.join(",");
+      // this.postMultiChange.rightAnswer = Object.assign({}, this.postMultiChange.rightAnswers.join(","));
       this.$axios({ //提交数据到选择题题库表
         url: '/api/MultiQuestion',
         method: 'post',
@@ -632,25 +642,10 @@ export default {
         let status = res.data.code
         if(status == 200) {
           this.$message({
-            message: '已添加到题库',
+            message: '试题修改成功',
             type: 'success'
           })
-          this.lastQuestion = this.postMultiChange.question;
-          this.postMultiChange = {level: 1}
         }
-      }).then(() => {
-        this.$axios(`/api/multiQuestionId`).then(res => { //获取当前题目的questionId
-          let questionId = res.data.data.questionId
-          this.postPaper.questionId = questionId
-          this.postPaper.questionType = 1
-          this.$axios({
-            url: '/api/paperManage',
-            method: 'Post',
-            data: {
-              ...this.postPaper
-            }
-          })
-        })
       })
     },
   },
@@ -658,7 +653,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.add {
+.edit {
   margin: 0px 40px;
   .box {
     padding: 0px 20px;

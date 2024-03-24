@@ -12,6 +12,8 @@ public class Item {
 
     private Integer changeNumber;
 
+    private Integer changeMultiNumber;
+
     private Integer fillNumber;
 
     private Integer judgeNumber;

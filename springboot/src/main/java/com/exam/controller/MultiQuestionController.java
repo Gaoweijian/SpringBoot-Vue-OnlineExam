@@ -39,6 +39,7 @@ public class MultiQuestionController {
     @GetMapping("/multiQuestionById")
     public ApiResult findOnlyQuestion(@RequestParam(value = "questionId") String questionId) {
         MultiQuestion res = multiQuestionService.findQuestionById(questionId);
+        res.setRightAnswers(res.getRightAnswer().split(","));
         return ApiResultHandler.buildApiResult(200, "查询成功", res);
     }
 }

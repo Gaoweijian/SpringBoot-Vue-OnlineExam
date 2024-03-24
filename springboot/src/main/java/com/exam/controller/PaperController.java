@@ -7,6 +7,7 @@ import com.exam.serviceimpl.MultiQuestionServiceImpl;
 import com.exam.serviceimpl.PaperServiceImpl;
 import com.exam.util.ApiResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -35,13 +36,20 @@ public class PaperController {
 
     @GetMapping("/paper/{paperId}")
     public Map<Integer, List<?>> findById(@PathVariable("paperId") Integer paperId) {
-        List<MultiQuestion> multiQuestionRes = multiQuestionService.findByIdAndType(paperId);   //选择题题库 1
+        List<MultiQuestion> multiQuestionRes = multiQuestionService.findByIdAndType(paperId,0);   //选择题题库 1
         List<FillQuestion> fillQuestionsRes = fillQuestionService.findByIdAndType(paperId);     //填空题题库 2
         List<JudgeQuestion> judgeQuestionRes = judgeQuestionService.findByIdAndType(paperId);   //判断题题库 3
+        List<MultiQuestion> multisQuestionRes = multiQuestionService.findByIdAndType(paperId,1);   //多选判断题题库 4
+        if(!CollectionUtils.isEmpty(multiQuestionRes)){
+            multisQuestionRes.forEach(item->{
+                item.setRightAnswers(item.getRightAnswer().split(","));
+            });
+        }
         Map<Integer, List<?>> map = new HashMap<>();
         map.put(1,multiQuestionRes);
         map.put(2,fillQuestionsRes);
         map.put(3,judgeQuestionRes);
+        map.put(4,multisQuestionRes);
         return  map;
     }
 

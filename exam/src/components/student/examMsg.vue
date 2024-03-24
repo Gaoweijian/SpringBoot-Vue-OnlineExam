@@ -68,6 +68,18 @@
                 </ul>
               </div>
             </el-collapse-item>
+
+            <el-collapse-item>
+              <template slot="title" name="4">
+                <div class="titlei">多项选择题 (共{{topicCount[3]}}题 共计{{score[3]}}分)</div>
+              </template>
+              <div class="contenti">
+                <ul class="question" v-for="(list, index) in topic[4]" :key="index">
+                  <li>{{index+1}}. {{list.question}} {{list.score}}分</li>
+                </ul>
+              </div>
+            </el-collapse-item>
+
           </el-collapse>
         </el-collapse-item>
 

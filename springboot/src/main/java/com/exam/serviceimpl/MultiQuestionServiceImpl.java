@@ -17,8 +17,8 @@ public class MultiQuestionServiceImpl implements MultiQuestionService {
     private MultiQuestionMapper multiQuestionMapper;
 
     @Override
-    public List<MultiQuestion> findByIdAndType(Integer PaperId) {
-        return multiQuestionMapper.findByIdAndType(PaperId);
+    public List<MultiQuestion> findByIdAndType(Integer PaperId,Integer multiType) {
+        return multiQuestionMapper.findByIdAndType(PaperId,multiType);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class MultiQuestionServiceImpl implements MultiQuestionService {
     }
 
     @Override
-    public List<Integer> findBySubject(String subject, Integer pageNo) {
-        return multiQuestionMapper.findBySubject(subject, pageNo);
+    public List<Integer> findBySubject(String subject, Integer pageNo,Integer multiType) {
+        return multiQuestionMapper.findBySubject(subject, pageNo,multiType);
     }
 
     @Override
