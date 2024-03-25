@@ -189,6 +189,7 @@
           </div>
           <div class="submit">
             <el-button type="primary" @click="changeSubmit()">提交修改</el-button>
+            <el-button type="primary" @click="goBack()">返回</el-button>
           </div>
         </div>
         <!-- 填空题部分 -->
@@ -221,6 +222,7 @@
           </div>
           <div class="submit">
             <el-button type="primary" @click="fillSubmit()">提交修改</el-button>
+            <el-button type="primary" @click="goBack()">返回</el-button>
           </div>
         </div>
         <!-- 判断题 -->
@@ -253,6 +255,7 @@
           </div>
           <div class="submit">
             <el-button type="primary" @click="judgeSubmit()">提交修改</el-button>
+            <el-button type="primary" @click="goBack()">返回</el-button>
           </div>
         </div>
 
@@ -335,6 +338,7 @@
           </div>
           <div class="submit">
             <el-button type="primary" @click="changeMultiSubmit()">提交修改</el-button>
+            <el-button type="primary" @click="goBack()">返回</el-button>
           </div>
         </div>
       </section>
@@ -507,6 +511,9 @@ export default {
     this.getParams()
   },
   methods: {
+    goBack() {
+      this.$router.push({path: '/selectAnswer', query: {type:this.$route.query.type,subject:this.$route.query.subject}})
+    },
     // handleClick(tab, event) {
     //   console.log(tab, event);
     // },
@@ -631,7 +638,7 @@ export default {
     },
     changeMultiSubmit() { //选择题题库提交
       //转换多选答案
-      // this.postMultiChange.rightAnswer = Object.assign({}, this.postMultiChange.rightAnswers.join(","));
+      this.postMultiChange.rightAnswer = this.postMultiChange.rightAnswers.join(",");
       this.$axios({ //提交数据到选择题题库表
         url: '/api/MultiQuestion',
         method: 'post',

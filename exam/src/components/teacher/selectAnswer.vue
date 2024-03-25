@@ -100,6 +100,8 @@ export default {
     };
   },
   created() {
+    this.queryParams.subject = this.$route.query.subject //获取试卷名称
+    this.queryParams.type = this.$route.query.type //type
     this.getAnswerInfo();
   },
   methods: {

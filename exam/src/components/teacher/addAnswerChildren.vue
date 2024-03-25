@@ -593,6 +593,7 @@ export default {
     },
     changeSubmit() { //选择题题库提交
       this.postChange.subject = this.subject
+      this.postChange.multiType = 0;
       this.$axios({ //提交数据到选择题题库表
         url: '/api/MultiQuestion',
         method: 'post',
