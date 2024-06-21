@@ -8,7 +8,7 @@
           prop="answerDate"
           label="考试日期"
           sortable
-          width="300"
+          width="200"
           column-key="answerDate"
           :filters="filter"
           :filter-method="filterHandler">
@@ -16,16 +16,21 @@
         <el-table-column
           prop="subject"
           label="课程名称"
-          width="300"
+          width="250"
           filter-placement="bottom-end">
           <template slot-scope="scope">
             <el-tag>{{scope.row.subject}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="etScore" label="考试分数" width="200"></el-table-column>
-        <el-table-column label="是否及格" width="100">
+        <el-table-column prop="etScore" label="考试分数" width="150"></el-table-column>
+        <el-table-column label="是否及格" width="150">
           <template slot-scope="scope">
             <el-tag :type="scope.row.etScore>= 60 ? 'success' : 'danger'">{{scope.row.etScore >= 60 ? "及格" : "不及格"}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="detail" label="历史记录" width="180">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="openHistory(scope.row)">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -104,6 +109,11 @@ export default {
     filterHandler(value, row, column) {
       const property = column["property"];
       return row[property] === value;
+    },
+    openHistory(row){
+      //跳转到试卷详情页
+      this.$router.push({path: '/answerRecord', query: {examCode: row.examCode}})
+      console.log(row.examCode)
     }
   }
 };

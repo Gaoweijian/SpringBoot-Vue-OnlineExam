@@ -14,8 +14,8 @@
         </li>
       </ul>
       <ul class="paper" v-loading="loading">
-        <li class="item" v-for="(item,index) in pagination.records" :key="index">
-          <h4 @click="toExamMsg(item.examCode)">{{ item.source }}</h4>
+        <li class="item" v-for="(item,index) in pagination.records" :key="index" @click="toExamMsg(item.examCode)">
+          <h4 style="color: #0195ff">{{ item.source }}</h4>
           <p class="name">{{ item.source }}-{{ item.description }}</p>
           <div class="info">
             <i class="el-icon-loading"></i><span>{{ item.examDate.substr(0, 10) }}</span>

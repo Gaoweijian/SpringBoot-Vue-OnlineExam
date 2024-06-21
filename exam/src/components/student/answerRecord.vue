@@ -551,8 +551,7 @@ export default {
               studentId: this.userInfo.id, //学号
               subject: this.examData.source, //课程名称
               etScore: finalScore, //答题成绩
-              answerDate: answerDate, //答题日期,
-              answerRecord:{}
+              answerDate: answerDate, //答题日期
             }
           }).then(res => {
             if(res.data.code == 200) {

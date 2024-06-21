@@ -5,7 +5,7 @@
     <div class="wrapper">
       <ul class="top">
         <li class="order">
-          <el-badge :value="12" class="item" type="primary">
+          <el-badge :value="1" class="item" type="primary">
             <span>全部</span>
           </el-badge>
         </li>
@@ -15,7 +15,7 @@
           </el-badge>
         </li>
         <li class="order">
-          <el-badge :value="2" class="item" type="primary">
+          <el-badge :value="1" class="item" type="primary">
             <span>已开始</span>
           </el-badge>
         </li>
@@ -28,8 +28,8 @@
         <li><el-button type="primary" @click="search()">搜索试卷</el-button></li>
       </ul>
       <ul class="paper" v-loading="loading">
-        <li class="item" v-for="(item,index) in pagination.records" :key="index">
-          <h4 @click="toExamMsg(item.examCode)">{{item.source}}</h4>
+        <li class="item" v-for="(item,index) in pagination.records" :key="index" @click="toExamMsg(item.examCode)">
+          <h4 style="color: #0195ff">{{item.source}}</h4>
           <p class="name">{{item.source}}-{{item.description}}</p>
           <div class="info">
             <i class="el-icon-loading"></i><span>{{item.examDate.substr(0,10)}}</span>
@@ -73,7 +73,7 @@ export default {
     this.loading = true
   },
   // watch: {
-    
+
   // },
   methods: {
     //获取当前所有考试信息
