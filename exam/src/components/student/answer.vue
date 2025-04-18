@@ -388,6 +388,7 @@ export default {
         let data = this.topic[1]
         this.bg_flag = true
         data[this.index]["isClick"] = true
+        data[this.index].record = val
       }
       /* 保存学生答题选项 */
       this.topic1Answer[this.index] = val
