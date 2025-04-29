@@ -80,7 +80,15 @@ export default new Router({
         {
           path: '/addTeacher',
           component: () => import ('@/components/admin/addTeacher')
+        },
+        {
+          path: '/addNotice',
+          component: () => import ('@/components/notice/addNotice')
         }
+//        {
+//          path: '/noticeManage',
+//          component: () => import ('@/components/admin/noticeManage')
+//        }
       ]
     },
     {
@@ -97,6 +105,7 @@ export default new Router({
         {path: '/answerRecord', component: () => import("@/components/student/answerRecord")}
       ]
     },
-    {path: '/answer',component: () => import('@/components/student/answer')}
+    {path: '/answer',component: () => import('@/components/student/answer')},
+    {path: '/addNotice', component: () => import("@/components/notice/addNotice")}
   ]
 })

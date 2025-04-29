@@ -55,11 +55,19 @@ export default {
     addData() {
       let role = this.$cookies.get("role")
       if(role == 0) {
+        // 管理员
         this.menu.push({
           index: '5',
           title: '教师管理',
           icon: 'icon-Userselect',
           content:[{item1:'教师管理',path:'/teacherManage'},{item2: '添加教师',path: '/addTeacher'}],
+        })
+        //新增选项
+        this.menu.push({
+          index: '6',
+          title: '公告管理',
+          icon: 'icon-SwitchFilled',
+          content:[{item1:'公告创建',path:'/addNotice'}],//,{item2: '公告列表',path: '/noticeManage'}
         })
       }
     }

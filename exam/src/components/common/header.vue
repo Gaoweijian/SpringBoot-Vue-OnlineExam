@@ -14,8 +14,8 @@
           <transition name="fade">
             <div class="out" ref="out" v-show="login_flag">
               <ul>
-                <li><a href="javascript:;">用户信息</a></li>
-                <li><a href="javascript:;">设置</a></li>
+<!--                <li><a href="javascript:;">用户信息</a></li>-->
+<!--                <li><a href="javascript:;">设置</a></li>-->
                 <li class="exit" @click="exit()"><a href="javascript:;">退出登录</a></li>
               </ul>
             </div>
@@ -35,7 +35,7 @@ export default {
       user: { //用户信息
         userName: null,
         userId: null
-      } 
+      }
     }
   },
   created() {
@@ -65,7 +65,8 @@ export default {
       this.$cookies.remove("cid")
       this.$cookies.remove("role")
       if(role == 0) {
-        this.menu.pop()
+        this.menu.pop();
+        this.menu.pop();
       }
     }
   },
@@ -145,6 +146,7 @@ export default {
 .out a {
   text-decoration: none;
   color: #000;
+  color: #7d4fe9;
 }
 .out .exit {
   margin-top: 4px;

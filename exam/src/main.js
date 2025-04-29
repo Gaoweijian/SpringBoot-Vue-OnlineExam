@@ -11,7 +11,13 @@ import VueCookies from 'vue-cookies'
 import store from '@/vuex/store'
 // 导入全局样式表
 import '../src/assets/iess/common.css'
+  // 富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
+Vue.use(VueQuillEditor)
 Vue.use(ElementUI)
 Vue.use(VueCookies)
 

@@ -40,6 +40,7 @@
     <section class="remind">
       <span>管理员账号：9527</span>
       <span>教师账号：20081001</span>
+      <span>gao侧耳倾听：164973</span>
       <span>密码都是：123456</span>
     </section>
   </div>
